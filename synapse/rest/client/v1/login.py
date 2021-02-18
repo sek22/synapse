@@ -20,6 +20,7 @@ from synapse.api.errors import Codes, LoginError, SynapseError
 from synapse.api.ratelimiting import Ratelimiter
 from synapse.appservice import ApplicationService
 from synapse.handlers.sso import SsoIdentityProvider
+from synapse.http import get_request_uri
 from synapse.http.server import HttpServer, finish_request
 from synapse.http.servlet import (
     RestServlet,
@@ -379,11 +380,7 @@ class SsoRedirectServlet(RestServlet):
 
         # if this isn't the expected hostname, redirect to the right one, so that we
         # get our cookies back.
-        requested_uri = b"%s://%s%s" % (
-            b"https" if request.isSecure() else b"http",
-            request.getHeader(b"host"),
-            request.uri,
-        )
+        requested_uri = get_request_uri(request)
         baseurl_bytes = self._public_baseurl.encode("utf-8")
         if not requested_uri.startswith(baseurl_bytes):
             i = requested_uri.index(b"/_matrix")
