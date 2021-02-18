@@ -126,6 +126,9 @@ class FakeChannel:
     def getHost(self):
         return None
 
+    def isSecure(self):
+        return False
+
     @property
     def transport(self):
         return self
