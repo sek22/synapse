@@ -82,7 +82,10 @@ def _get_requested_host(request: IRequest) -> bytes:
         # default port for http
         return hostname
 
-    return b":%i" % (host.port,)
+    return b"%s:%i" % (
+        hostname,
+        host.port,
+    )
 
 
 def get_request_user_agent(request: IRequest, default: str = "") -> str:

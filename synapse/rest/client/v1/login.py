@@ -383,6 +383,13 @@ class SsoRedirectServlet(RestServlet):
         requested_uri = get_request_uri(request)
         baseurl_bytes = self._public_baseurl.encode("utf-8")
         if not requested_uri.startswith(baseurl_bytes):
+            # swap out the incorrect base URL for the right one.
+            #
+            # The idea here is to redirect from
+            #    https://foo.bar/whatever/_matrix/...
+            # to
+            #    https://public.baseurl/_matrix/...
+            #
             i = requested_uri.index(b"/_matrix")
             new_uri = baseurl_bytes[:-1] + requested_uri[i:]
             logger.info(
