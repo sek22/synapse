@@ -429,6 +429,12 @@ class DatabasePool:
         self.event_chain_id_gen = build_sequence_generator(
             engine, get_chain_id_txn, "event_auth_chain_id"
         )
+        with make_conn(
+            database_config, engine, "event_auth_chain_consistency"
+        ) as db_conn:
+            self.event_chain_id_gen.check_consistency(
+                db_conn, "event_auth_chains", "chain_id"  # type: ignore
+            )
 
     def is_running(self) -> bool:
         """Is the database pool currently running"""
